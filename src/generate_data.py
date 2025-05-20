@@ -3,7 +3,7 @@ import random
 from datetime import datetime, timedelta
 
 def generate_user_id():
-    return f"u{random.randint(1, 1000000):06d}"
+    return f"u{random.randint(1, 1000):06d}"
 
 def generate_timestamp():
     start_date = datetime(2023, 1, 1)
@@ -14,7 +14,7 @@ def generate_action_type():
     return random.choice(['page_view', 'edit', 'create', 'delete', 'share'])
 
 def generate_page_id():
-    return f"p{random.randint(1, 1000000):06d}"
+    return f"p{random.randint(1, 1000):06d}"
 
 def generate_duration_ms():
     return random.randint(100, 300000)
@@ -67,7 +67,7 @@ def generate_user_metadata(num_records, filename):
             ])
 
 # Generate sample datasets
-generate_user_interactions(1000000, 'user_interactions_sample.csv')
-generate_user_metadata(100000, 'user_metadata_sample.csv')
+generate_user_interactions(10000000, 'user_interactions_sample.csv')
+generate_user_metadata(1000000, 'user_metadata_sample.csv')
 
 print("Sample datasets generated successfully.")
