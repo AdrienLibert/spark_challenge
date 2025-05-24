@@ -12,15 +12,13 @@ spark = SparkSession.builder \
     .config("spark.eventLog.dir", "./spark-events") \
     .getOrCreate()
 
-spark.conf.set("spark.sql.session.timeZone", "Asia/Hong_Kong")
-
 df = spark.read.csv("./data/user_interactions_sample.csv", header=True, inferSchema=True)
 df = df.dropDuplicates(["user_id", "timestamp"])
-
-df = df.withColumn("timestamp", to_timestamp(col("timestamp"), "yyyy-MM-dd HH:mm:ss"))
-
 df = df.filter(col("user_id").isNotNull() & col("timestamp").isNotNull())
 df = df.filter(col("action_type").isin(["create", "edit", "share", "page_view", "delete"]))
+
+
+df = df.withColumn("timestamp", to_timestamp(col("timestamp"), "yyyy-MM-dd HH:mm:ss"))
 df = df.filter(col("timestamp") <= current_timestamp())
 
 # Outliers
