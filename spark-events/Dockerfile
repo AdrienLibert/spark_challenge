@@ -1,10 +1,10 @@
 FROM ubuntu:latest
 
 RUN apt-get update && \
-    apt-get install -y openjdk-17-jdk && \
+    apt-get install -y openjdk-17-jdk wget && \
     rm -rf /var/lib/apt/lists/*
 
-RUN wget https://dlcdn.apache.org/spark/spark-3.5.2/spark-3.5.2-bin-hadoop3.tgz && \
+RUN wget https://archive.apache.org/dist/spark/spark-3.5.2/spark-3.5.2-bin-hadoop3.tgz && \
     tar -xzf spark-3.5.2-bin-hadoop3.tgz && \
     mv spark-3.5.2-bin-hadoop3 /opt/spark && \
     rm spark-3.5.2-bin-hadoop3.tgz

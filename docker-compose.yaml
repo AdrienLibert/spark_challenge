@@ -1,44 +1,18 @@
 services:
-  kafka:
-    image: docker.io/bitnami/kafka:3.8
-    container_name: kafka
+  spark-history:
+    image: local/spark-events
+    container_name: spark-history
     ports:
-      - "9092:9092"
-      - "9093:9093"
-    environment:
-      - KAFKA_CFG_NODE_ID=0
-      - KAFKA_CFG_PROCESS_ROLES=controller,broker
-      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@localhost:9093
-      - KAFKA_KRAFT_CLUSTER_ID=abcdefghijklmnopqrstuv
-      - KAFKA_CFG_LISTENERS=PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
-      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
-      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
-      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
-      - KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR=1
-      - KAFKA_CFG_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=1
-      - KAFKA_CFG_TRANSACTION_STATE_LOG_MIN_ISR=1
+      - "18080:18080"
     volumes:
-      - kafka_data:/bitnami/kafka
+      - ./spark-events:/spark-events
+    environment:
+      - SPARK_HOME=/opt/spark
+      - JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+      - PATH=$PATH:/opt/spark/bin
+    networks:
+      - spark-network
 
-  faker:
-    build:
-      context: .
-      dockerfile: faker/Dockerfile.faker
-    container_name: faker_service
-    network_mode: "host"
-    depends_on:
-      - kafka
-
-  etl:
-    build:
-      context: .
-      dockerfile: etl/Dockerfile.etl
-    container_name: etl_service
-    network_mode: "host"
-    depends_on:
-      - kafka
-
-volumes:
-  kafka_data:
-    driver: local
+networks:
+  spark-network:
+    driver: bridge

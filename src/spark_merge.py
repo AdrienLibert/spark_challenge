@@ -28,8 +28,6 @@ skewed_user_counts_interactions = df_interactions.groupBy(join_column).count().o
 print("\nTop 10 most frequent user_ids in interactions (potential skew):")
 skewed_user_counts_interactions.show()
 
-
-
 skewed_user_counts_metadata = df_metadata.groupBy(join_column).count().orderBy(col("count").desc()).limit(10)
 print("\nTop 10 most frequent user_ids in metadata (potential skew):")
 skewed_user_counts_metadata.show()
