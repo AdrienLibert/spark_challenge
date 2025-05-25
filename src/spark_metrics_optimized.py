@@ -11,6 +11,7 @@ spark = SparkSession.builder \
     .master("local[*]") \
     .config("spark.eventLog.enabled", "true") \
     .config("spark.eventLog.dir", "./spark-events") \
+    .config("spark.sql.shuffle.partitions", "100") \
     .getOrCreate()
 
 parquet_path = "./data/user_interactions_sample.parquet"
