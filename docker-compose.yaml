@@ -12,7 +12,13 @@ services:
       - PATH=$PATH:/opt/spark/bin
     networks:
       - spark-network
-
+  spark-job:
+    image: local/spark-job
+    volumes:
+      - ./:/root
+    command: /entrypoint.sh  
+    networks:
+      - spark-network 
 networks:
   spark-network:
     driver: bridge

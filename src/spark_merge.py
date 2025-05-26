@@ -25,11 +25,18 @@ df_metadata = spark.read.option("header", "true") \
 join_column = "user_id"
 
 skewed_user_counts_interactions = df_interactions.groupBy(join_column).count().orderBy(col("count").desc()).limit(10)
-print("\nTop 10 most frequent user_ids in interactions (potential skew):")
+print("\nTop 10 most frequent user_ids in interactions:")
+skewed_user_counts_interactions.show()
+skewed_user_counts_interactions = df_interactions.groupBy(join_column).count().orderBy(col("count").asc()).limit(10)
+print("\nTop 10 least frequent user_ids in interactions:")
 skewed_user_counts_interactions.show()
 
+
 skewed_user_counts_metadata = df_metadata.groupBy(join_column).count().orderBy(col("count").desc()).limit(10)
-print("\nTop 10 most frequent user_ids in metadata (potential skew):")
+print("\nTop 10 most frequent user_ids in metadata:")
+skewed_user_counts_metadata.show()
+skewed_user_counts_metadata = df_metadata.groupBy(join_column).count().orderBy(col("count").asc()).limit(10)
+print("\nTop 10 least frequent user_ids in interactions:")
 skewed_user_counts_metadata.show()
 
 n_interactions = df_interactions.count()
@@ -39,6 +46,11 @@ print(n_metadata)
 print(n_interactions)
 print(spark.conf.get("spark.sql.autoBroadcastJoinThreshold"))
 
+
+#Use broadcast join because the number of rows in metadata is much smaller than interactions and the memory threshold is set to 10MB
 df_joined = df_interactions.join(broadcast(df_metadata), join_column, "inner")
 
+df_joined.explain()
+
+df_joined.show()
 spark.stop()

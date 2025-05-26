@@ -9,8 +9,6 @@ RUN wget https://archive.apache.org/dist/spark/spark-3.5.2/spark-3.5.2-bin-hadoo
     mv spark-3.5.2-bin-hadoop3 /opt/spark && \
     rm spark-3.5.2-bin-hadoop3.tgz
 
-WORKDIR /data
-
 ENV SPARK_HOME=/opt/spark
 ENV PATH=$PATH:$SPARK_HOME/bin
 ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
