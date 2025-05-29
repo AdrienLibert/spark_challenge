@@ -4,21 +4,31 @@ services:
     container_name: spark-history
     ports:
       - "18080:18080"
-    volumes:
-      - ./spark-events:/spark-events
     environment:
       - SPARK_HOME=/opt/spark
       - JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
       - PATH=$PATH:/opt/spark/bin
+      - SPARK_HISTORY_OPTS=-Dspark.history.fs.logDirectory=/app/spark-events
+    volumes:
+      - spark-events:/app/spark-events
     networks:
       - spark-network
   spark-job:
     image: local/spark-job
+    environment:
+      - SPARK_EVENT_LOG_ENABLED=true
+      - SPARK_EVENT_LOG_DIR=/app/spark-events
+      - SPARK_LOCAL_DIRS=/app/spark-events
+      - PYTHONPATH=/app/src
     volumes:
-      - ./:/root
-    command: /entrypoint.sh  
+      - spark-events:/app/spark-events
+      - ./data:/app/data
+    command: /app/src/entrypoint.sh
     networks:
-      - spark-network 
+      - spark-network
+volumes:
+  spark-events:
+    name: spark-events
 networks:
   spark-network:
     driver: bridge
