@@ -23,12 +23,8 @@ RUN mkdir -p /app/spark-events
 
 RUN echo '#!/bin/bash\n\
 set -x\n\
-echo "Starting entrypoint.sh at $(date)"\n\
-echo "Running generate_data.py"\n\
 python /app/src/generate_data.py > /app/data/generate_data.log 2>&1 || { echo "generate_data.py failed"; exit 1; }\n\
-echo "Running csv_to_parquet.py"\n\
 python /app/src/csv_to_parquet.py > /app/data/csv_to_parquet.log 2>&1 || { echo "csv_to_parquet.py failed"; exit 1; }\n\
-echo "Running other Python scripts in /app/src"\n\
 for script in /app/src/*.py; do\n\
   if [[ "$script" != "/app/src/generate_data.py" && "$script" != "/app/src/csv_to_parquet.py" ]]; then\n\
     echo "Running $script"\n\

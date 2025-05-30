@@ -11,6 +11,7 @@ services:
       - SPARK_HISTORY_OPTS=-Dspark.history.fs.logDirectory=/app/spark-events
     volumes:
       - spark-events:/app/spark-events
+    command: /bin/sh -c "/opt/spark/bin/spark-class org.apache.spark.deploy.history.HistoryServer"
     networks:
       - spark-network
   spark-job:
